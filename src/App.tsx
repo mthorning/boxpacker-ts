@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useReducer } from "react";
+import Panel from "./Panel";
+import { State, Action } from "./types";
+import "./App.css";
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function reducer(state: State, action: Action) {
+  switch (action.type) {
+    case "add":
+      return {
+        ...state,
+        entities: [...state.entities, action.payload]
+      };
+    default:
+      return state;
+  }
 }
+const App: React.FC = () => {
+  const initialState = {
+    entities: []
+  };
+  const [state, dispatch] = useReducer(reducer, initialState);
+  return (
+    <>
+      <Panel state={state} dispatch={dispatch} />
+    </>
+  );
+};
 
 export default App;
