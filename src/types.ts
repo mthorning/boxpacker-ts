@@ -4,11 +4,18 @@ export type Entity = {
   parent: "page" | EntityName;
 };
 
-export type Action = {
+export interface AddAction {
   type: "add";
   payload: Entity;
-};
+}
 
-export type State = {
+export interface EditAction {
+  type: "edit";
+  payload: { entity: Entity; newName: EntityName };
+}
+
+export type Action = AddAction | EditAction;
+
+export type AppState = {
   entities: Entity[];
 };

@@ -1,14 +1,29 @@
 import React, { useReducer } from "react";
 import Panel from "./Panel";
-import { State, Action } from "./types";
+import { AppState, Entity, Action } from "./types";
 import "./App.css";
 
-function reducer(state: State, action: Action) {
+function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case "add":
+      //FIXME: unique name or ID
       return {
         ...state,
         entities: [...state.entities, action.payload]
+      };
+    case "edit":
+      const { entity, newName } = action.payload;
+      const index = state.entities.findIndex(
+        ({ name }) => name === entity.name
+      );
+      let newEntity: Entity = { name: newName, parent: "page" };
+      return {
+        ...state,
+        entities: [
+          ...state.entities.slice(0, index),
+          newEntity,
+          ...state.entities.slice(index + 1)
+        ]
       };
     default:
       return state;
