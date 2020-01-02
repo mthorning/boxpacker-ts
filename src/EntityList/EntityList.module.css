@@ -1,0 +1,17 @@
+.entityList {
+  padding: 0.4rem;
+}
+.entityItem {
+  font-size: 1rem;
+  height: 1rem;
+  margin-top: 0.4em;
+}
+.entityItem li {
+  list-style: none;
+  height: 100%;
+  padding: 0.2em;
+  cursor: pointer;
+}
+.entityItem input {
+  height: 100%;
+}

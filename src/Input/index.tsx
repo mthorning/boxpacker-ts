@@ -1,4 +1,5 @@
 import React, { FC, useState, useRef, useEffect } from "react";
+import "./Input.css";
 
 type InputProps = {
   submitHandler: (val: string) => void;
@@ -28,7 +29,6 @@ const Input: FC<InputProps> = ({ submitHandler, initialInputVal = "" }) => {
 
   return (
     <input
-      autoFocus
       ref={inputRef}
       onChange={handleChange}
       onKeyDown={handleKeyDown}

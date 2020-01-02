@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react";
 import { Entity, EntityName, Action } from "../types";
 import EntityListItem from "./EntityListIem";
+import styles from "./EntityList.module.css";
 
 export type EditModeType = null | EntityName;
 
@@ -16,7 +17,7 @@ const EntityList: FC<EntityListProps> = ({ entities, dispatch }) => {
     dispatch({ type: "edit", payload });
   }
   return (
-    <ul>
+    <ul className={styles.entityList}>
       {entities.map(entity => (
         <EntityListItem
           {...{ key: entity.name, entity, editEntity, editMode, setEditMode }}

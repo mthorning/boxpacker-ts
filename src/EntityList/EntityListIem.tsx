@@ -9,6 +9,7 @@ import React, {
 import Input from "../Input";
 import { Entity, EntityName } from "../types";
 import { EditModeType } from "./";
+import styles from "./EntityList.module.css";
 
 interface EntityListItemProps {
   entity: Entity;
@@ -54,7 +55,7 @@ const EntityListItem: FC<EntityListItemProps> = props => {
   }, [handleDocumentClick]);
 
   return (
-    <div ref={wrapperRef}>
+    <div ref={wrapperRef} className={styles.entityItem}>
       {inEditMode ? (
         <Input initialInputVal={entity.name} submitHandler={handleEditSubmit} />
       ) : (

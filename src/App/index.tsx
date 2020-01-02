@@ -1,7 +1,7 @@
 import React, { useReducer } from "react";
-import Panel from "./Panel";
-import { AppState, Entity, Action } from "./types";
-import "./App.css";
+import Panel from "../Panel";
+import { AppState, Entity, Action } from "../types";
+import styles from "./App.module.css";
 
 function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
@@ -35,9 +35,10 @@ const App: React.FC = () => {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
-    <>
+    <div className={styles.app}>
       <Panel state={state} dispatch={dispatch} />
-    </>
+      <Panel state={state} dispatch={dispatch} />
+    </div>
   );
 };
 
