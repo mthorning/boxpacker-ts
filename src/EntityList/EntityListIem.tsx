@@ -1,67 +1,53 @@
-import React, {
-  FC,
-  useRef,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useCallback
-} from "react";
+import React, { FC } from "react";
 import Input from "../Input";
-import { Entity, EntityName } from "../types";
-import { EditModeType } from "./";
+import { Action, Entity, EntityParent } from "../types";
 import styles from "./EntityList.module.css";
+import { useDoubleClick } from "../hooks";
+import { useSelectedEntity, useAssertEditMode } from "../AppState";
 
 interface EntityListItemProps {
   entity: Entity;
-  editEntity: (payload: { entity: Entity; newName: EntityName }) => void;
-  editMode: EditModeType;
-  setEditMode: Dispatch<SetStateAction<EditModeType>>;
+  parentType: EntityParent;
+  dispatch: (a: Action) => void;
 }
 
 const EntityListItem: FC<EntityListItemProps> = props => {
-  const { entity, editEntity, editMode, setEditMode } = props;
-  const inEditMode = editMode === entity.name;
+  const { entity, dispatch, parentType } = props;
+  const selectedEntity = useSelectedEntity(parentType);
+  const inEditMode = useAssertEditMode(entity.id, parentType);
+  const handleClick = useDoubleClick(onSingleClick, onDoubleClick);
 
-  const doubleClick = useRef(false);
-  function handleClick(e: any) {
-    if (doubleClick.current) {
-      setTimeout(() => setEditMode(entity.name));
-    } else {
-      doubleClick.current = true;
-      setTimeout(() => {
-        doubleClick.current = false;
-      }, 200);
-    }
+  const selectedClass =
+    selectedEntity && selectedEntity.id === entity.id ? styles.selected : "";
+
+  function onSingleClick() {
+    dispatch({
+      type: "SET_SELECTED_MODE",
+      payload: { id: entity.id, parentType }
+    });
   }
 
-  function handleEditSubmit(valFromInput: EntityName) {
-    editEntity({ entity, newName: valFromInput });
-    setEditMode(null);
+  function onDoubleClick() {
+    dispatch({ type: "SET_EDIT_MODE", payload: { parentType, id: entity.id } });
   }
 
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const handleDocumentClick = useCallback(
-    (e: any) => {
-      if (!wrapperRef.current!.contains(e.target)) {
-        setEditMode(null);
-      }
-    },
-    [setEditMode]
-  );
-
-  useEffect(() => {
-    document.addEventListener("click", handleDocumentClick);
-    return () => document.removeEventListener("click", handleDocumentClick);
-  }, [handleDocumentClick]);
+  function handleEditSubmit(valFromInput: string) {
+    dispatch({
+      type: "EDIT_ENTITY",
+      payload: { id: entity.id, newName: valFromInput }
+    });
+  }
 
   return (
-    <div ref={wrapperRef} className={styles.entityItem}>
+    <li className={styles.entityItem}>
       {inEditMode ? (
         <Input initialInputVal={entity.name} submitHandler={handleEditSubmit} />
       ) : (
-        <li onClick={handleClick}>{entity.name}</li>
+        <p className={selectedClass} onClick={handleClick}>
+          {entity.name}
+        </p>
       )}
-    </div>
+    </li>
   );
 };
 

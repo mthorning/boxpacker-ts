@@ -1,43 +1,17 @@
-import React, { useReducer } from "react";
+import React, { FC } from "react";
 import Panel from "../Panel";
-import { AppState, Entity, Action } from "../types";
 import styles from "./App.module.css";
+import { EntityParent } from "../types";
+import { useSelectedEntity } from "../AppState";
 
-function reducer(state: AppState, action: Action): AppState {
-  switch (action.type) {
-    case "add":
-      //FIXME: unique name or ID
-      return {
-        ...state,
-        entities: [...state.entities, action.payload]
-      };
-    case "edit":
-      const { entity, newName } = action.payload;
-      const index = state.entities.findIndex(
-        ({ name }) => name === entity.name
-      );
-      let newEntity: Entity = { name: newName, parent: "page" };
-      return {
-        ...state,
-        entities: [
-          ...state.entities.slice(0, index),
-          newEntity,
-          ...state.entities.slice(index + 1)
-        ]
-      };
-    default:
-      return state;
-  }
-}
-const App: React.FC = () => {
-  const initialState = {
-    entities: []
-  };
-  const [state, dispatch] = useReducer(reducer, initialState);
+const App: FC = () => {
+  const selectedBox = useSelectedEntity(EntityParent.Page);
+  let noBox = "No Box Selected";
+  let itemsTitle = selectedBox ? selectedBox.name : noBox;
   return (
     <div className={styles.app}>
-      <Panel state={state} dispatch={dispatch} />
-      <Panel state={state} dispatch={dispatch} />
+      <Panel title="Boxes" parentType={EntityParent.Page} />
+      <Panel title={itemsTitle} parentType={EntityParent.Box} />
     </div>
   );
 };
