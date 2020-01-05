@@ -1,13 +1,13 @@
 import React, { FC } from "react";
 import Input from "../Input";
-import { Action, Entity, EntityParent } from "../types";
+import { Action, Entity, ParentType } from "../types";
 import styles from "./EntityList.module.css";
 import { useDoubleClick } from "../hooks";
 import { useSelectedEntity, useAssertEditMode } from "../AppState";
 
 interface EntityListItemProps {
   entity: Entity;
-  parentType: EntityParent;
+  parentType: ParentType;
   dispatch: (a: Action) => void;
 }
 

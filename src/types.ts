@@ -1,19 +1,23 @@
 export type EntityID = string;
-export enum EntityParent {
+export enum ParentType {
   Page,
   Box
 }
+export type EntityParent = {
+  parentType: ParentType;
+  id?: EntityID | null;
+};
 export type Entity = {
   id: EntityID;
   name: string;
-  parent: { parentType: EntityParent; id?: EntityID };
+  parent: EntityParent;
 };
 
 export type SelectedEntity = EntityID | null;
 
 export interface AddAction {
   type: "ADD_ENTITY";
-  payload: { name: string; parent: { parentType: EntityParent } };
+  payload: { name: string; parent: { parentType: ParentType } };
 }
 
 export interface EditAction {
@@ -25,16 +29,11 @@ export interface SetMode {
   type: "SET_SELECTED_MODE" | "SET_EDIT_MODE";
   payload: {
     id: SelectedEntity;
-    parentType: EntityParent;
+    parentType: ParentType;
   };
 }
 
-export interface UnsetMode {
-  type: "UNSET_SELECTED_MODE" | "UNSET_EDIT_MODE";
-  payload: EntityParent;
-}
-
-export type Action = AddAction | EditAction | SetMode | UnsetMode;
+export type Action = AddAction | EditAction | SetMode;
 
 export type AppState = {
   entities: Entity[];

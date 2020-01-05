@@ -1,14 +1,21 @@
 import React, { FC, useContext, useReducer, createContext } from "react";
-import { AppState, Entity, Action, EntityID, EntityParent } from "./types";
+import {
+  AppState,
+  Entity,
+  Action,
+  EntityID,
+  ParentType,
+  EntityParent
+} from "./types";
 import { uuid } from "uuidv4";
 
-function getNewMode<T>(mode: T[], parentType: EntityParent, newValue: T): T[] {
+function getNewMode<T>(mode: T[], parentType: ParentType, newValue: T): T[] {
   const newMode = [...mode];
   newMode[parentType] = newValue;
   return newMode;
 }
 export function reducer(state: AppState, action: Action): AppState {
-  console.log("ACTION = ", action.type);
+  console.log("ACTION = ", action.type, action.payload);
   switch (action.type) {
     case "ADD_ENTITY": {
       return {
@@ -41,7 +48,12 @@ export function reducer(state: AppState, action: Action): AppState {
     }
     case "SET_SELECTED_MODE": {
       const { parentType, id } = action.payload;
-      const selectedMode = getNewMode(state.selectedMode, parentType, id);
+      const isSameEntity = id === state.selectedMode[parentType];
+      const selectedMode = getNewMode(
+        state.selectedMode,
+        parentType,
+        isSameEntity ? null : id
+      );
       const editMode = getNewMode(state.editMode, parentType, false);
       return {
         ...state,
@@ -56,22 +68,6 @@ export function reducer(state: AppState, action: Action): AppState {
       return {
         ...state,
         selectedMode,
-        editMode
-      };
-    }
-    case "UNSET_SELECTED_MODE": {
-      const selectedMode = getNewMode(state.selectedMode, action.payload, null);
-      const editMode = getNewMode(state.editMode, action.payload, false);
-      return {
-        ...state,
-        selectedMode,
-        editMode
-      };
-    }
-    case "UNSET_EDIT_MODE": {
-      const editMode = getNewMode(state.editMode, action.payload, false);
-      return {
-        ...state,
         editMode
       };
     }
@@ -104,14 +100,29 @@ export const useEntity = (id: EntityID) => {
   return state.entities.find(entity => entity.id === id);
 };
 
-export const useSelectedEntity = (parent: EntityParent) => {
+export const useParentsEntities = (parent: EntityParent) => {
+  const [{ entities }] = useContext(AppStateContext);
+  switch (parent.parentType) {
+    case ParentType.Page:
+      return entities.filter(
+        entity => entity.parent.parentType === parent.parentType
+      );
+    case ParentType.Box:
+      if (parent.id) {
+        return entities.filter(entity => entity.parent.id === parent.id);
+      }
+      return [];
+  }
+};
+
+export const useSelectedEntity = (parent: ParentType) => {
   const [state] = useContext(AppStateContext);
   const selectedId = state.selectedMode[parent];
   if (!selectedId) return null;
   return state.entities.find(entity => entity.id === selectedId);
 };
 
-export const useAssertEditMode = (id: EntityID, parent: EntityParent) => {
+export const useAssertEditMode = (id: EntityID, parent: ParentType) => {
   const [{ editMode, selectedMode }] = useContext(AppStateContext);
   return editMode[parent] && selectedMode[parent] === id;
 };

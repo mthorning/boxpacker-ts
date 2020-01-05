@@ -3,25 +3,24 @@ import EntityInput from "../Input";
 import EntityList from "../EntityList";
 import { EntityParent } from "../types";
 import styles from "./Panel.module.css";
-import { useAppState } from "../AppState";
+import { useParentsEntities, useAppState } from "../AppState";
 
 type PanelProps = {
   title: string;
-  parentType: EntityParent;
+  parent: EntityParent;
 };
 
 const Panel: FC<PanelProps> = props => {
-  const { parentType, title } = props;
-  const [state, dispatch] = useAppState();
+  const { parent, title } = props;
+  const { parentType } = parent;
+  const [, dispatch] = useAppState();
 
   function addEntity(name: string) {
-    const payload = { name, parent: { parentType } };
+    const payload = { name, parent };
     dispatch({ type: "ADD_ENTITY", payload });
   }
 
-  const entities = state.entities.filter(
-    entity => entity.parent.parentType === parentType
-  );
+  const entities = useParentsEntities(parent);
 
   return (
     <div className={styles.panel}>
