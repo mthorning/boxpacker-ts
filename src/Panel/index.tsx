@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import EntityInput from "../Input";
+import Input from "../Input";
 import EntityList from "../EntityList";
 import { EntityParent } from "../types";
 import styles from "./Panel.module.css";
@@ -8,10 +8,11 @@ import { useParentsEntities, useAppState } from "../AppState";
 type PanelProps = {
   title: string;
   parent: EntityParent;
+  disabled?: boolean;
 };
 
 const Panel: FC<PanelProps> = props => {
-  const { parent, title } = props;
+  const { disabled, parent, title } = props;
   const { parentType } = parent;
   const [, dispatch] = useAppState();
 
@@ -25,7 +26,7 @@ const Panel: FC<PanelProps> = props => {
   return (
     <div className={styles.panel}>
       <h4>{title}</h4>
-      <EntityInput submitHandler={addEntity} />
+      <Input disabled={disabled} submitHandler={addEntity} />
       <EntityList {...{ entities, parentType }} />
     </div>
   );

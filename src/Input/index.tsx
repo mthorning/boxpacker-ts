@@ -4,19 +4,24 @@ import "./Input.css";
 type InputProps = {
   submitHandler: (val: string) => void;
   initialInputVal?: string;
+  disabled?: boolean;
 };
 
-const Input: FC<InputProps> = ({ submitHandler, initialInputVal = "" }) => {
+const Input: FC<InputProps> = ({
+  disabled,
+  submitHandler,
+  initialInputVal = ""
+}) => {
   const [valFromInput, setValFromInput] = useState(initialInputVal);
 
-  function handleKeyDown(e: any) {
-    if (e.which === 13) {
-      submitHandler(valFromInput);
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.which === 13 && valFromInput) {
+      submitHandler(valFromInput.trim());
       setValFromInput("");
     }
   }
 
-  function handleChange(e: any) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setValFromInput(e.target.value);
   }
 
@@ -29,6 +34,7 @@ const Input: FC<InputProps> = ({ submitHandler, initialInputVal = "" }) => {
 
   return (
     <input
+      disabled={disabled}
       ref={inputRef}
       onChange={handleChange}
       onKeyDown={handleKeyDown}

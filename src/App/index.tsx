@@ -8,12 +8,17 @@ const App: FC = () => {
   const selectedBox = useSelectedEntity(ParentType.Page);
   const itemParent = { parentType: ParentType.Box, id: selectedBox?.id };
 
-  const noBox = "No Box Selected";
-  const itemsTitle = selectedBox ? selectedBox.name : noBox;
+  let itemsTitle, disabled;
+  if (selectedBox && selectedBox.name) {
+    itemsTitle = selectedBox.name;
+  } else {
+    disabled = true;
+    itemsTitle = "No Box Selected";
+  }
   return (
     <div className={styles.app}>
       <Panel title="Boxes" parent={{ parentType: ParentType.Page }} />
-      <Panel title={itemsTitle} parent={itemParent} />
+      <Panel disabled={disabled} title={itemsTitle} parent={itemParent} />
     </div>
   );
 };

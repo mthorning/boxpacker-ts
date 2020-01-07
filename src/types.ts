@@ -33,7 +33,15 @@ export interface SetMode {
   };
 }
 
-export type Action = AddAction | EditAction | SetMode;
+export interface MoveItem {
+  type: "MOVE_ITEM";
+  payload: {
+    boxId: EntityID;
+    itemId: EntityID;
+  };
+}
+
+export type Action = AddAction | EditAction | SetMode | MoveItem;
 
 export type AppState = {
   entities: Entity[];

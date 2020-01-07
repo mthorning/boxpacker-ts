@@ -4,6 +4,7 @@ import { Action, Entity, ParentType } from "../types";
 import styles from "./EntityList.module.css";
 import { useDoubleClick } from "../hooks";
 import { useSelectedEntity, useAssertEditMode } from "../AppState";
+import DragOrDrop from "./DragOrDrop";
 
 interface EntityListItemProps {
   entity: Entity;
@@ -43,9 +44,7 @@ const EntityListItem: FC<EntityListItemProps> = props => {
       {inEditMode ? (
         <Input initialInputVal={entity.name} submitHandler={handleEditSubmit} />
       ) : (
-        <p className={selectedClass} onClick={handleClick}>
-          {entity.name}
-        </p>
+        <DragOrDrop {...{ selectedClass, handleClick, entity }} />
       )}
     </li>
   );

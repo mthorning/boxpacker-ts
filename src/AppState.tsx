@@ -71,6 +71,29 @@ export function reducer(state: AppState, action: Action): AppState {
         editMode
       };
     }
+    case "MOVE_ITEM": {
+      const { itemId, boxId } = action.payload;
+      const index = state.entities.findIndex(entity => itemId === entity.id);
+      const entity = state.entities[index];
+      const selectedMode = getNewMode(
+        state.selectedMode,
+        ParentType.Page,
+        boxId
+      );
+      const newEntity: Entity = {
+        ...entity,
+        parent: { ...entity.parent, id: boxId }
+      };
+      return {
+        ...state,
+        entities: [
+          ...state.entities.slice(0, index),
+          newEntity,
+          ...state.entities.slice(index + 1)
+        ],
+        selectedMode
+      };
+    }
     default:
       return state;
   }
