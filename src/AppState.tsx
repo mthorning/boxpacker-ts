@@ -135,6 +135,8 @@ export const useParentsEntities = (parent: EntityParent) => {
         return entities.filter(entity => entity.parent.id === parent.id);
       }
       return [];
+    default:
+      return [];
   }
 };
 

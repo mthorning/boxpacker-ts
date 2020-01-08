@@ -4,14 +4,9 @@ import "./Input.css";
 type InputProps = {
   submitHandler: (val: string) => void;
   initialInputVal?: string;
-  disabled?: boolean;
 };
 
-const Input: FC<InputProps> = ({
-  disabled,
-  submitHandler,
-  initialInputVal = ""
-}) => {
+const Input: FC<InputProps> = ({ submitHandler, initialInputVal = "" }) => {
   const [valFromInput, setValFromInput] = useState(initialInputVal);
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -34,7 +29,6 @@ const Input: FC<InputProps> = ({
 
   return (
     <input
-      disabled={disabled}
       ref={inputRef}
       onChange={handleChange}
       onKeyDown={handleKeyDown}

@@ -1,33 +1,33 @@
-import React, { FC } from "react";
-import Input from "../Input";
-import EntityList from "../EntityList";
+import React, { FC, useState, useEffect } from "react";
 import { EntityParent } from "../types";
+import ListPane from "./ListPane";
+import InfoPane from "./ListPane";
 import styles from "./Panel.module.css";
-import { useParentsEntities, useAppState } from "../AppState";
 
 type PanelProps = {
-  title: string;
+  panelType: PanelType;
   parent: EntityParent;
-  disabled?: boolean;
+  hide?: boolean | undefined;
 };
 
+export enum PanelType {
+  List,
+  Info
+}
+
 const Panel: FC<PanelProps> = props => {
-  const { disabled, parent, title } = props;
-  const { parentType } = parent;
-  const [, dispatch] = useAppState();
-
-  function addEntity(name: string) {
-    const payload = { name, parent };
-    dispatch({ type: "ADD_ENTITY", payload });
-  }
-
-  const entities = useParentsEntities(parent);
-
+  const { panelType, hide } = props;
+  console.log(PanelType[panelType]);
+  const [fade, setFade] = useState("");
+  const [display, setDisplay] = useState("");
+  useEffect(() => {
+    setFade(hide ? styles.fadeOut : styles.fadeIn);
+    setTimeout(() => setDisplay(hide ? styles.hide : styles.show), 300);
+  }, [hide]);
   return (
-    <div className={styles.panel}>
-      <h4>{title}</h4>
-      <Input disabled={disabled} submitHandler={addEntity} />
-      <EntityList {...{ entities, parentType }} />
+    <div className={`${styles.panel} ${fade} ${display}`}>
+      {panelType === PanelType.List && <ListPane {...props} />}
+      {panelType === PanelType.Info && <InfoPane {...props} />}
     </div>
   );
 };

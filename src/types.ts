@@ -1,7 +1,8 @@
 export type EntityID = string;
 export enum ParentType {
   Page,
-  Box
+  Box,
+  Item
 }
 export type EntityParent = {
   parentType: ParentType;

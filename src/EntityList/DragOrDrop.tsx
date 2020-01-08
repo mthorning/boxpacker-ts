@@ -60,6 +60,8 @@ const DragOrDrop: FC<DragOrDropProps> = props => {
       return <Drag {...{ className, onClick, entity }} />;
     case ParentType.Page:
       return <Drop {...{ className, onClick, entity }} />;
+    default:
+      return <p {...{ className, onClick, entity }}>{entity.name}</p>;
   }
 };
 

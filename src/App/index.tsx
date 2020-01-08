@@ -1,24 +1,31 @@
 import React, { FC } from "react";
-import Panel from "../Panel";
+import Panel, { PanelType } from "../Panel";
 import styles from "./App.module.css";
 import { ParentType } from "../types";
 import { useSelectedEntity } from "../AppState";
 
 const App: FC = () => {
   const selectedBox = useSelectedEntity(ParentType.Page);
+  const selectedItem = useSelectedEntity(ParentType.Box);
   const itemParent = { parentType: ParentType.Box, id: selectedBox?.id };
+  const infoParent = { parentType: ParentType.Item, id: selectedItem?.id };
 
-  let itemsTitle, disabled;
-  if (selectedBox && selectedBox.name) {
-    itemsTitle = selectedBox.name;
-  } else {
-    disabled = true;
-    itemsTitle = "No Box Selected";
-  }
   return (
     <div className={styles.app}>
-      <Panel title="Boxes" parent={{ parentType: ParentType.Page }} />
-      <Panel disabled={disabled} title={itemsTitle} parent={itemParent} />
+      <Panel
+        panelType={PanelType.List}
+        parent={{ parentType: ParentType.Page }}
+      />
+      <Panel
+        panelType={PanelType.List}
+        hide={!selectedBox}
+        parent={itemParent}
+      />
+      <Panel
+        panelType={PanelType.Info}
+        hide={!selectedItem}
+        parent={infoParent}
+      />
     </div>
   );
 };

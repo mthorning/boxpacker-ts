@@ -1,10 +1,28 @@
 .panel {
+  width: 400px;
   border: 1px solid gray;
   border-radius: 4px;
   padding: 8px;
   margin: 8px;
-  flex-grow: 1;
   font-size: 1.25rem;
-  display: flex;
   flex-direction: column;
+}
+.title {
+  min-height: 26px;
+}
+.fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 300ms, opacity 300ms;
+}
+.fadeIn {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 300ms, opacity 300ms;
+}
+.hide {
+  display: none;
+}
+.show {
+  display: flex;
 }
