@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from "react";
 import { EntityParent } from "../types";
 import ListPane from "./ListPane";
-import InfoPane from "./ListPane";
+import InfoPane from "./InfoPane";
 import styles from "./Panel.module.css";
 
 type PanelProps = {
@@ -17,7 +17,6 @@ export enum PanelType {
 
 const Panel: FC<PanelProps> = props => {
   const { panelType, hide } = props;
-  console.log(PanelType[panelType]);
   const [fade, setFade] = useState("");
   const [display, setDisplay] = useState("");
   useEffect(() => {

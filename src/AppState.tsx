@@ -1,4 +1,10 @@
-import React, { FC, useContext, useReducer, createContext } from "react";
+import React, {
+  FC,
+  useMemo,
+  useContext,
+  useReducer,
+  createContext
+} from "react";
 import {
   AppState,
   Entity,
@@ -14,6 +20,26 @@ function getNewMode<T>(mode: T[], parentType: ParentType, newValue: T): T[] {
   newMode[parentType] = newValue;
   return newMode;
 }
+
+function getUniqueName(
+  currentName: string,
+  entities: Entity[],
+  parentId: EntityID
+): string {
+  console.log(entities);
+  const sameNames = entities.filter(
+    e => e.parent.id === parentId && e.name === currentName
+  );
+  if (!!sameNames.length) {
+    return getUniqueName(
+      currentName + `(${sameNames.length})`,
+      entities,
+      parentId
+    );
+  }
+  return currentName;
+}
+
 export function reducer(state: AppState, action: Action): AppState {
   console.log("ACTION = ", action.type, action.payload);
   switch (action.type) {
@@ -80,10 +106,13 @@ export function reducer(state: AppState, action: Action): AppState {
         ParentType.Page,
         boxId
       );
+
       const newEntity: Entity = {
         ...entity,
+        name: getUniqueName(entity.name, state.entities, boxId),
         parent: { ...entity.parent, id: boxId }
       };
+
       return {
         ...state,
         entities: [
@@ -123,8 +152,7 @@ export const useEntity = (id: EntityID) => {
   return state.entities.find(entity => entity.id === id);
 };
 
-export const useParentsEntities = (parent: EntityParent) => {
-  const [{ entities }] = useContext(AppStateContext);
+function filterByEntity(entities: Entity[], parent: EntityParent): Entity[] {
   switch (parent.parentType) {
     case ParentType.Page:
       return entities.filter(
@@ -138,6 +166,18 @@ export const useParentsEntities = (parent: EntityParent) => {
     default:
       return [];
   }
+}
+
+export const useParentsEntities = (
+  parent: EntityParent,
+  nameFilter: string
+) => {
+  const [{ entities }] = useContext(AppStateContext);
+  return useMemo(() => {
+    return filterByEntity(entities, parent).filter(e =>
+      e.name.includes(nameFilter)
+    );
+  }, [nameFilter, entities, parent]);
 };
 
 export const useSelectedEntity = (parent: ParentType) => {

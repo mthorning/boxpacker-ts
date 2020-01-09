@@ -17,7 +17,7 @@ const EntityList: FC<EntityListProps> = ({ entities, parentType }) => {
       {entities.map(entity => (
         <EntityListItem
           {...{
-            key: entity.name,
+            key: entity.id,
             entity,
             parentType,
             dispatch

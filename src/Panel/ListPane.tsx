@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import Input from "../Input";
 import EntityList from "../EntityList";
 import { EntityParent } from "../types";
@@ -8,17 +8,23 @@ const ListPane: FC<{ parent: EntityParent }> = props => {
   const { parent } = props;
   const { parentType } = parent;
   const [, dispatch] = useAppState();
+  const [inputVal, setInputVal] = useState("");
+  const handleInputChange = (val: string) => setInputVal(val);
 
-  function addEntity(name: string) {
+  const entities = useParentsEntities(parent, inputVal);
+
+  function addEntity(name: string, clearInput: () => void) {
     const payload = { name, parent };
-    dispatch({ type: "ADD_ENTITY", payload });
+    if (!entities.length) {
+      dispatch({ type: "ADD_ENTITY", payload });
+      clearInput();
+      setInputVal("");
+    }
   }
-
-  const entities = useParentsEntities(parent);
 
   return (
     <>
-      <Input submitHandler={addEntity} />
+      <Input submitHandler={addEntity} handleInputChange={handleInputChange} />
       <EntityList {...{ entities, parentType }} />
     </>
   );
