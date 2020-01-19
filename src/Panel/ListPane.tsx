@@ -15,11 +15,9 @@ const ListPane: FC<{ parent: EntityParent }> = props => {
 
   function addEntity(name: string, clearInput: () => void) {
     const payload = { name, parent };
-    if (!entities.length) {
-      dispatch({ type: "ADD_ENTITY", payload });
-      clearInput();
-      setInputVal("");
-    }
+    dispatch({ type: "ADD_ENTITY", payload });
+    clearInput();
+    setInputVal("");
   }
 
   return (

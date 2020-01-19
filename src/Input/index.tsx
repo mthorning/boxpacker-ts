@@ -1,5 +1,5 @@
 import React, { FC, useState, useRef, useEffect } from "react";
-import "./Input.css";
+import styles from "./Input.module.css";
 
 type InputProps = {
   submitHandler: (val: string, callback: () => void) => void;
@@ -33,12 +33,18 @@ const Input: FC<InputProps> = ({
   }, [initialInputVal]);
 
   return (
-    <input
-      ref={inputRef}
-      onChange={handleChange}
-      onKeyDown={handleKeyDown}
-      value={valFromInput}
-    />
+    <div className={styles.container}>
+      <input
+        ref={inputRef}
+        className={styles.input}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        value={valFromInput}
+      />
+      {valFromInput && (
+        <span onClick={() => setValFromInput("")} className={styles.clear} />
+      )}
+    </div>
   );
 };
 

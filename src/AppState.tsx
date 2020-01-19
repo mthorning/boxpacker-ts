@@ -21,25 +21,6 @@ function getNewMode<T>(mode: T[], parentType: ParentType, newValue: T): T[] {
   return newMode;
 }
 
-function getUniqueName(
-  currentName: string,
-  entities: Entity[],
-  parentId: EntityID
-): string {
-  console.log(entities);
-  const sameNames = entities.filter(
-    e => e.parent.id === parentId && e.name === currentName
-  );
-  if (!!sameNames.length) {
-    return getUniqueName(
-      currentName + `(${sameNames.length})`,
-      entities,
-      parentId
-    );
-  }
-  return currentName;
-}
-
 export function reducer(state: AppState, action: Action): AppState {
   console.log("ACTION = ", action.type, action.payload);
   switch (action.type) {
@@ -109,7 +90,7 @@ export function reducer(state: AppState, action: Action): AppState {
 
       const newEntity: Entity = {
         ...entity,
-        name: getUniqueName(entity.name, state.entities, boxId),
+        name: entity.name,
         parent: { ...entity.parent, id: boxId }
       };
 

@@ -11,13 +11,7 @@ interface ParagraphProps {
 }
 
 const Drag: FC<ParagraphProps> = ({ entity, ...rest }) => {
-  const [, dispatch] = useAppState();
-
   function onDragStart(e: React.DragEvent) {
-    //dispatch({
-    //  type: "SET_SELECTED_MODE",
-    //  payload: { id: entity.id, parentType: entity.parent.parentType }
-    //});
     e.dataTransfer.setData("itemId", entity.id);
   }
   return (
