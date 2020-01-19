@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import Input from "../Input";
 import EntityList from "../EntityList";
-import { EntityParent } from "../types";
+import { EntityParent, ParentType, Entity } from "../types";
 import { useParentsEntities, useAppState } from "../AppState";
 
 const ListPane: FC<{ parent: EntityParent }> = props => {
@@ -21,11 +21,27 @@ const ListPane: FC<{ parent: EntityParent }> = props => {
   }
 
   return (
-    <>
-      <Input submitHandler={addEntity} handleInputChange={handleInputChange} />
-      <EntityList {...{ entities, parentType }} />
-    </>
+    <Component {...{ addEntity, handleInputChange, entities, parentType }} />
   );
 };
+
+type ComponentProps = {
+  addEntity: (name: string, clearInput: () => void) => void;
+  handleInputChange: (val: string) => void;
+  entities: Entity[];
+  parentType: ParentType;
+};
+
+export const Component: FC<ComponentProps> = ({
+  addEntity,
+  handleInputChange,
+  entities,
+  parentType
+}) => (
+  <>
+    <Input submitHandler={addEntity} handleInputChange={handleInputChange} />
+    <EntityList {...{ entities, parentType }} />
+  </>
+);
 
 export default ListPane;
