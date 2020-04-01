@@ -1,9 +1,9 @@
 import React from "react";
 import Input from "./";
 
-export default { title: "Input" };
+export default { component: Input, title: "Input" };
 
-export const basic = () => {
+export const Default = () => {
   return (
     <div
       style={{
